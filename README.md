@@ -2,6 +2,18 @@
 
 DolphinScheduler 运行监控平台 — 一个基于 Web 的 Apache DolphinScheduler 任务运行状态监控与分析系统。
 
+## 界面预览
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/images/screenshot1.jpg" width="400"/><br/>综合评估</td>
+    <td align="center"><img src="docs/images/screenshot2.jpg" width="400"/><br/>告警中心</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/images/screenshot3.jpg" width="400"/><br/>项目调度</td>
+  </tr>
+</table>
+
 ## 功能特性
 
 - **综合评估** — 多维度指标评分与可视化仪表盘，全局掌握调度健康状态
