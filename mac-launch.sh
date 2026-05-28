@@ -20,9 +20,44 @@ fi
 
 PID=$(lsof -i :$PORT -t 2>/dev/null)
 if [ -n "$PID" ]; then
-    echo "服务已在运行中 (PID: $PID)"
-    open "http://localhost:$PORT"
-    exit 0
+    CMD=$(ps -p $PID -o command= 2>/dev/null)
+    if echo "$CMD" | grep -q "dist/index.js"; then
+        echo "DolphinScheduler Monitor 服务已在运行中 (PID: $PID)"
+        open "http://localhost:$PORT"
+        exit 0
+    else
+        echo "端口 $PORT 已被其他程序占用:"
+        echo "  PID: $PID"
+        echo "  命令: $CMD"
+        echo
+        echo "请选择操作:"
+        echo "  1) 停止占用进程并启动本服务"
+        echo "  2) 使用其他端口 (3002) 启动"
+        echo "  3) 取消启动"
+        echo
+        read -p "请输入选项 [1/2/3]: " choice
+        case $choice in
+            1)
+                echo "正在停止进程 $PID..."
+                kill $PID 2>/dev/null
+                sleep 1
+                REMAINING=$(lsof -i :$PORT -t 2>/dev/null)
+                if [ -n "$REMAINING" ]; then
+                    kill -9 $REMAINING 2>/dev/null
+                    sleep 1
+                fi
+                echo "进程已停止。"
+                ;;
+            2)
+                PORT=3002
+                echo "将使用端口 $PORT 启动。"
+                ;;
+            *)
+                echo "已取消启动。"
+                exit 0
+                ;;
+        esac
+    fi
 fi
 
 cd "$SERVER_DIR"
@@ -31,10 +66,10 @@ if [ ! -d "node_modules" ]; then
     npm install --omit=dev > /dev/null 2>&1
 fi
 
-nohup node dist/index.js > "$LOG_FILE" 2>&1 &
+PORT=$PORT nohup node dist/index.js > "$LOG_FILE" 2>&1 &
 SERVER_PID=$!
 
-echo "服务启动中 (PID: $SERVER_PID)..."
+echo "服务启动中 (PID: $SERVER_PID, 端口: $PORT)..."
 
 READY=false
 for i in $(seq 1 30); do
