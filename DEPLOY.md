@@ -276,7 +276,118 @@ server {
 
 ---
 
-## 7. 配置说明
+## 7. macOS 部署
+
+### 7.1 基本部署
+
+```bash
+# 1. 安装 Node.js 18+ (如未安装，推荐使用 Homebrew)
+brew install node
+
+# 2. 将项目复制到目标位置
+cp -r server/ /opt/dolphinscheduler-monitor/server/
+
+# 3. 安装生产依赖
+cd /opt/dolphinscheduler-monitor/server
+npm install --omit=dev
+
+# 4. 启动服务
+node dist/index.js
+```
+
+服务启动后访问 `http://localhost:3001`。
+
+### 7.2 使用启动脚本
+
+项目提供了三种 Mac 启动方式：
+
+**方式 A — 应用模式（推荐）**
+
+后台启动服务，自动打开浏览器，无需保留终端窗口：
+
+```bash
+bash mac-launch.sh
+```
+
+脚本会自动完成：
+1. 后台启动 Node.js 服务（不占用终端）
+2. 等待服务就绪（最多 30 秒）
+3. 使用默认浏览器打开应用页面
+4. 日志输出到 `dolphin-monitor.log`
+
+> 如果服务已在运行，会直接打开浏览器而不会重复启动。
+
+**方式 B — 终端模式**
+
+在终端中启动服务，可看到实时日志输出，按 `Ctrl+C` 停止：
+
+```bash
+bash mac-start.sh
+```
+
+**方式 C — 停止服务**
+
+```bash
+bash mac-stop.sh
+```
+
+自动查找并停止后台运行的服务进程。
+
+### 7.3 launchd 服务（开机自启）
+
+创建 plist 文件实现开机自启：
+
+```bash
+cat > ~/Library/LaunchAgents/com.dolphinscheduler.monitor.plist << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dolphinscheduler.monitor</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/node</string>
+        <string>/opt/dolphinscheduler-monitor/server/dist/index.js</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/opt/dolphinscheduler-monitor/server</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/opt/dolphinscheduler-monitor/server/stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/opt/dolphinscheduler-monitor/server/stderr.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PORT</key>
+        <string>3001</string>
+    </dict>
+</dict>
+</plist>
+EOF
+```
+
+启用并启动：
+
+```bash
+# 加载服务
+launchctl load ~/Library/LaunchAgents/com.dolphinscheduler.monitor.plist
+
+# 查看状态
+launchctl list | grep dolphinscheduler
+
+# 停止服务
+launchctl unload ~/Library/LaunchAgents/com.dolphinscheduler.monitor.plist
+```
+
+> 注意：根据实际 Node.js 安装路径修改 `/usr/local/bin/node`，可通过 `which node` 查询。
+
+---
+
+## 8. 配置说明
 
 ### 7.1 端口配置
 
@@ -293,7 +404,7 @@ set PORT=8080 && node dist\index.js
 $env:PORT=8080; node dist\index.js
 ```
 
-### 7.2 数据库配置
+### 8.2 数据库配置
 
 应用首次启动后，通过 Web 界面添加 DolphinScheduler 数据库连接：
 
@@ -313,7 +424,7 @@ $env:PORT=8080; node dist\index.js
 
 配置信息保存在 `server/data/config.db`（SQLite 本地数据库）中。
 
-### 7.3 目录结构说明
+### 8.3 目录结构说明
 
 ```
 项目根目录/
@@ -332,12 +443,15 @@ $env:PORT=8080; node dist\index.js
 ├── start.bat                # Windows 系统模式启动
 ├── 停止服务.bat              # Windows 停止服务
 ├── start.sh                 # Linux 启动脚本
+├── mac-start.sh             # Mac 终端模式启动
+├── mac-stop.sh              # Mac 停止服务
+├── mac-launch.sh            # Mac 后台启动+自动打开浏览器
 └── build.bat                # 一键构建脚本
 ```
 
 ---
 
-## 8. 常见问题
+## 9. 常见问题
 
 ### Q: 双击 `启动.vbs` 后没有反应？
 
@@ -363,7 +477,7 @@ $env:PORT=8080; node dist\index.js
 
 ### Q: 如何修改监听端口？
 
-设置环境变量 `PORT`，参见 [7.1 端口配置](#71-端口配置)。
+设置环境变量 `PORT`，参见 [8.1 端口配置](#81-端口配置)。
 
 ### Q: 数据库连接配置丢失？
 
@@ -371,7 +485,7 @@ $env:PORT=8080; node dist\index.js
 
 ---
 
-## 9. 更新升级
+## 10. 更新升级
 
 1. 拉取最新代码
 2. 重新运行 `build.bat`（Windows）或手动构建

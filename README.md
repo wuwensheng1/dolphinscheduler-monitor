@@ -98,6 +98,9 @@ dolphinscheduler-monitor/
 │   └── tsconfig.json
 ├── build.bat                # Windows 一键构建脚本
 ├── start.sh                 # Linux 启动脚本
+├── mac-start.sh             # Mac 终端模式启动
+├── mac-stop.sh              # Mac 停止服务
+├── mac-launch.sh            # Mac 后台启动+自动打开浏览器
 └── DEPLOY.md                # 详细部署文档
 ```
 

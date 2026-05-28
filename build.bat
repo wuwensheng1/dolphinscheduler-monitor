@@ -102,6 +102,9 @@ copy /y "启动.vbs" dist\ >nul
 copy /y "停止服务.bat" dist\ >nul
 copy /y portable-start.bat dist\ >nul
 copy /y start.sh dist\ >nul
+copy /y mac-start.sh dist\ >nul
+copy /y mac-stop.sh dist\ >nul
+copy /y mac-launch.sh dist\ >nul
 
 echo.
 echo ============================================
@@ -111,6 +114,9 @@ echo.
 echo   Windows: 双击 启动.vbs 无终端窗口+独立应用窗口
 echo            双击 停止服务.bat 停止服务
 echo            双击 portable-start.bat 终端模式启动
+echo   Mac:     双击 mac-launch.sh 后台启动+自动打开浏览器
+echo            bash mac-start.sh 终端模式启动
+echo            bash mac-stop.sh 停止服务
 echo   Linux:   bash start.sh (需安装 Node.js)
 echo ============================================
 pause
