@@ -4,15 +4,11 @@ DolphinScheduler 运行监控平台 — 一个基于 Web 的 Apache DolphinSched
 
 ## 界面预览
 
-<table>
-  <tr>
-    <td align="center"><img src="docs/images/screenshot1.jpg" width="400"/><br/>综合评估</td>
-    <td align="center"><img src="docs/images/screenshot2.jpg" width="400"/><br/>告警中心</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="docs/images/screenshot3.jpg" width="400"/><br/>项目调度</td>
-  </tr>
-</table>
+<p align="center"><img src="docs/images/screenshot1.jpg" width="800"/><br/>综合评估</p>
+
+<p align="center"><img src="docs/images/screenshot2.jpg" width="800"/><br/>告警中心</p>
+
+<p align="center"><img src="docs/images/screenshot3.jpg" width="800"/><br/>项目调度</p>
 
 ## 功能特性
 
