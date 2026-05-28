@@ -1,0 +1,29 @@
+.row-failure {
+  background-color: #fff1f0 !important;
+}
+
+.row-failure:hover > td {
+  background-color: #ffccc7 !important;
+}
+
+.consecutive-fail-critical {
+  background-color: #ff4d4f !important;
+  color: #fff !important;
+}
+
+.consecutive-fail-critical:hover > td {
+  background-color: #cf1322 !important;
+  color: #fff !important;
+}
+
+.consecutive-fail-critical td {
+  color: #fff !important;
+}
+
+.consecutive-fail-warning {
+  background-color: #fff7e6 !important;
+}
+
+.consecutive-fail-warning:hover > td {
+  background-color: #ffe58f !important;
+}
